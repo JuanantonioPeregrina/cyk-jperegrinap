@@ -20,6 +20,12 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra mayúscula.
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
+        
+        if((nonterminal<='2') && (nonterminal>='A')){
+          
+        }else{
+            
+        }
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
