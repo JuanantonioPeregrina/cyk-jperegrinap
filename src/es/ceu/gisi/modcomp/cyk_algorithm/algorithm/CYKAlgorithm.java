@@ -2,6 +2,9 @@ package es.ceu.gisi.modcomp.cyk_algorithm.algorithm;
 
 import es.ceu.gisi.modcomp.cyk_algorithm.algorithm.exceptions.CYKAlgorithmException;
 import es.ceu.gisi.modcomp.cyk_algorithm.algorithm.interfaces.CYKAlgorithmInterface;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Esta clase contiene la implementación de la interfaz CYKAlgorithmInterface
@@ -20,13 +23,21 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra mayúscula.
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
-        
-        if((nonterminal<='2') && (nonterminal>='A')){
+        List<Character> letrasCreadas = new ArrayList<>(); // Lista de letras existentes
+          
+
+if (letrasCreadas.contains(nonterminal)) {
+    System.out.println("La letra " + nonterminal + " ya existe");
+}else{
+    letrasCreadas.add(nonterminal);
+    
+}
+        if((nonterminal>='A') && (nonterminal<='Z')){ // el valor de nonterminal es una letra mayúscula del alfabeto inglés
           
         }else{
-            
-        }
+           
         throw new UnsupportedOperationException("Not supported yet.");
+    }
     }
 
     @Override
