@@ -23,20 +23,21 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra mayúscula.
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
-        List<Character> letrasCreadas = new ArrayList<>(); // Lista de letras existentes
+        List<Character> letrasNTerminales = new ArrayList<>(); // Lista que almacena las letras existentes
           
 
-if (letrasCreadas.contains(nonterminal)) {
+if (letrasNTerminales.contains(nonterminal)) {
     System.out.println("La letra " + nonterminal + " ya existe");
 }else{
-    letrasCreadas.add(nonterminal);
+    letrasNTerminales.add(nonterminal);
     
 }
         if((nonterminal>='A') && (nonterminal<='Z')){ // el valor de nonterminal es una letra mayúscula del alfabeto inglés
           
         }else{
            
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new CYKAlgorithmException("No es un elemento no terminal.");
+        throw new CYKAlgorithmException();
     }
     }
 
@@ -48,8 +49,16 @@ if (letrasCreadas.contains(nonterminal)) {
      * @throws CYKAlgorithmException Si el elemento no es una letra minúscula.
      */
     public void addTerminal(char terminal) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+       List<Character> letrasTerminales  = new ArrayList<>();
+         if (terminal >= 'a' && terminal <= 'z') {
+             
+        letrasTerminales.add(terminal);
+} else {
+    //throw new CYKAlgorithmException("Símbolo inválido: " + terminal);
+    throw new CYKAlgorithmException();
+}
     }
+     
 
     @Override
     /**
