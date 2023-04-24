@@ -15,7 +15,11 @@ import java.util.List;
  */
 public class CYKAlgorithm implements CYKAlgorithmInterface {
 
-    @Override
+private List<Character> letrasNTerminales = new ArrayList<>(); /* Para que puede ser utilizada en todos los métodos. */
+private List<Character> letrasTerminales  = new ArrayList<>();
+private char eInicial;
+   
+@Override
     /**
      * Método que añade los elementos no terminales de la gramática.
      *
@@ -23,7 +27,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra mayúscula.
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
-        List<Character> letrasNTerminales = new ArrayList<>(); // Lista que almacena las letras existentes
+        //List<Character> letrasNTerminales = new ArrayList<>(); // Lista que almacena las letras existentes
           
 
 if (letrasNTerminales.contains(nonterminal)) {
@@ -49,7 +53,7 @@ if (letrasNTerminales.contains(nonterminal)) {
      * @throws CYKAlgorithmException Si el elemento no es una letra minúscula.
      */
     public void addTerminal(char terminal) throws CYKAlgorithmException {
-       List<Character> letrasTerminales  = new ArrayList<>();
+       //List<Character> letrasTerminales  = new ArrayList<>();
          if (terminal >= 'a' && terminal <= 'z') {
              
         letrasTerminales.add(terminal);
@@ -70,8 +74,20 @@ if (letrasNTerminales.contains(nonterminal)) {
      * conjunto de elementos no terminales.
      */
     public void setStartSymbol(char nonterminal) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    //char eInicial;
+       // if ((letrasNTerminales.isEmpty) && (letrasNTerminales.add())){
+      
+    if (letrasNTerminales.contains(nonterminal)){
+             
+    this.eInicial = nonterminal; //al elemento inicial actual lo inicializa como no terminal
+     
+        if (!letrasNTerminales.isEmpty()) {
+        this.eInicial = letrasNTerminales.get(0);
+        }
+    }else{
+        throw new CYKAlgorithmException();
     }
+    }   
 
     @Override
     /**
