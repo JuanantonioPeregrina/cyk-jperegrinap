@@ -4,6 +4,9 @@ import es.ceu.gisi.modcomp.cyk_algorithm.algorithm.exceptions.CYKAlgorithmExcept
 import es.ceu.gisi.modcomp.cyk_algorithm.algorithm.interfaces.CYKAlgorithmInterface;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 
 
 /**
@@ -101,7 +104,20 @@ if (letrasNTerminales.contains(nonterminal)) {
      * previamente.
      */
     public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    
+      Map<Character, List<String>> producciones = new HashMap<>();
+
+     if (producciones.containsKey(nonterminal)) { 
+    List<String> produccionesNT = producciones.get(nonterminal);
+    produccionesNT.add(production);
+} else {
+    List<String> produccionesNT = new ArrayList<>();
+    produccionesNT.add(production);
+    producciones.put(nonterminal, produccionesNT);
+}
+
+      
+        throw new CYKAlgorithmException();
     }
 
     @Override
