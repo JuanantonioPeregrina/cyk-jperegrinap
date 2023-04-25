@@ -105,18 +105,31 @@ if (letrasNTerminales.contains(nonterminal)) {
      */
     public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
     
-      Map<Character, List<String>> producciones = new HashMap<>();
+      Map<Character, List<String>> producciones = new HashMap<>();// Character almacena la cabeza de la producción
 
      if (producciones.containsKey(nonterminal)) { 
     List<String> produccionesNT = producciones.get(nonterminal);
     produccionesNT.add(production);
 } else {
     List<String> produccionesNT = new ArrayList<>();
-    produccionesNT.add(production);
-    producciones.put(nonterminal, produccionesNT);
+    produccionesNT.add(production); //se añaden las derivaciones
+    producciones.put(nonterminal, produccionesNT); //traspasa el no terminal 
 }
-
-      
+    
+   /* if (production.length() == 1 && Character.isLowerCase(production.charAt(0))) {
+        // Si la producción es una letra minúscula
+  
+        
+    } else if (production.length() == 2 && Character.isUpperCase(production.charAt(0)) && Character.isUpperCase(production.charAt(1))) {
+        // Si la producción son dos letras mayúsculas
+        
+   
+    } else {
+        // Si la producción no cumple con las restricciones
+        throw new CYKAlgorithmException();
+    } */
+}
+  
         throw new CYKAlgorithmException();
     }
 
