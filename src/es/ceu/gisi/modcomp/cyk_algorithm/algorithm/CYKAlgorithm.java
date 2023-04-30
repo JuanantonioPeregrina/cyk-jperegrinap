@@ -92,7 +92,10 @@ char nonterminal;
      * @throws CYKAlgorithmException Si el elemento insertado no forma parte del
      * conjunto de elementos no terminales.
      */
-    public void setStartSymbol(char nonterminal) throws CYKAlgorithmException {
+  
+
+
+      public void setStartSymbol(char nonterminal) throws CYKAlgorithmException {
     //char eInicial;
        // if ((letrasNTerminales.isEmpty) && (letrasNTerminales.add())){
       
@@ -119,25 +122,39 @@ char nonterminal;
      * compuesta por elementos (terminales o no terminales) no definidos
      * previamente.
      */
-    
-    /*public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-    if (!letrasNTerminales.contains(nonterminal)) {
+    public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
+    if (!letrasTerminales.contains(eInicial) && !letrasNTerminales.contains(eInicial)) {
+    //if (!letrasTerminales.contains(eInicial) && !letrasNTerminales.contains(eInicial) && eInicial != 'λ') {
+    throw new CYKAlgorithmException();
+    }
+    if (!letrasNTerminales.contains(eInicial) && eInicial != 'λ') {
         throw new CYKAlgorithmException();
     }
-    Production p = new Production(nonterminal, production);
-    if (production.containsKey(nonterminal)) {
-        List<Production> nonterminalProductions = productions.get(nonterminal);
-        nonterminalProductions.add(p);
-    } else {
-        List<Production> nonterminalProductions = new ArrayList<>();
-        nonterminalProductions.add(p);
-        productions.put(nonterminal, nonterminalProductions);
+
+    for (int i = 0; i < production.length(); i++) {
+        char symbol = production.charAt(i);
+        // rest of the code
     }
-    */
 
+    producciones.putIfAbsent(nonterminal, new ArrayList<String>());
+    producciones.get(nonterminal).add(production);
+} 
 
-    
-    public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
+    /*public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
+    for (int i = 0; i < production.length(); i++) {
+        char symbol = production.charAt(i);
+        if (!letrasTerminales.contains(eInicial) && !letrasNTerminales.contains(eInicial)) {
+            throw new CYKAlgorithmException();
+        }
+        if (!letrasNTerminales.contains(eInicial) && eInicial != 'λ') {
+            throw new CYKAlgorithmException();
+        }
+    }
+    producciones.putIfAbsent(nonterminal, new ArrayList<String>());
+    producciones.get(nonterminal).add(production);
+} */
+
+       /*public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
     if (!letrasNTerminales.contains(nonterminal)) {
         throw new CYKAlgorithmException();
     }
@@ -161,30 +178,14 @@ char nonterminal;
         throw new CYKAlgorithmException();
     }
 }
-
+*/
       //Map<Character, List<String>> producciones = new HashMap<>();// Character almacena la cabeza de la producción
 /*
 
     
 
       /*
-    if (!letrasNTerminales.contains(nonterminal)) {
-        throw new CYKAlgorithmException();
-    }
-
-    if (production.length() == 1 && Character.isLowerCase(production.charAt(0))) {
-        // Si la producción es una letra minúscula
-        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
-        produccionesNT.add(production);
-        producciones.put(nonterminal, produccionesNT);
-    } else if (production.length() == 2 && ((Character.isUpperCase(production.charAt(0)) && Character.isLowerCase(production.charAt(1))) || (Character.isLowerCase(production.charAt(0)) && Character.isUpperCase(production.charAt(1))))) {
-        // Si la producción tiene un símbolo mayúscula y otro minúscula
-        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
-        produccionesNT.add(production);
-        producciones.put(nonterminal, produccionesNT);
-    } else {
-        // Si la producción no cumple con las restricciones
-        throw new CYKAlgorithmException();
+     
     }
 }
 */
@@ -242,8 +243,13 @@ char nonterminal;
      * conjunto de terminales definido para la gramática introducida, si la
      * gramática es vacía o si el autómata carece de axioma.
      */
-    public boolean isDerived(String word) throws CYKAlgorithmException {
-    if (word == null || word.isEmpty()) {
+     public boolean isDerived(String word) throws CYKAlgorithmException {
+    
+       if (eInicial == '\0'){
+        throw new CYKAlgorithmException();
+       }
+       
+       if (word == null || word.isEmpty()) {
         throw new CYKAlgorithmException();
     }
 
@@ -252,10 +258,11 @@ char nonterminal;
             throw new CYKAlgorithmException();
         }
     }
-
-    if (eInicial == '\0' || producciones.isEmpty()) {
+    if (producciones.isEmpty()) {
         throw new CYKAlgorithmException();
     }
+    
+    
 
     int n = word.length();
 
@@ -302,30 +309,13 @@ char nonterminal;
     }
 
     // Comprobamos si la cadena está generada por el no terminal inicial
-    return matriz.get(0).get(n - 1).contains(eInicial);
+    if(matriz.get(0).get(n - 1).contains(eInicial)){
+        return true;
+    }
+        return false;
 }
 
-   /*public boolean isDerived(String word) throws CYKAlgorithmException {
-    if (word == null || word.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
 
-    for (char c : word.toCharArray()) {
-        if (!Character.isUpperCase(c) && !Character.isWhitespace(c)) { // Añade una comprobación para los espacios en blanco
-            throw new CYKAlgorithmException();
-        }
-    }
-
-    if (eInicial == '\0' || producciones.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-
-    // Implementación del algoritmo CYK
-    // ...
-
-    return false;
-}
-*/
   
 
 
@@ -339,50 +329,34 @@ char nonterminal;
             throw new CYKAlgorithmException();
         }
     }
-    /*for (char c : word.toCharArray()) {
-        if (!Character.isUpperCase(c)) {
-            throw new CYKAlgorithmException();
-        }
-    }
+    
 
     if (eInicial == '\0' || producciones.isEmpty()) {
         throw new CYKAlgorithmException();
     }
 
     return false;
-} */
+ 
 
-    
-    /*public boolean isDerived(String word) throws CYKAlgorithmException {
-    // Verificar que la palabra está formada sólo por elementos no terminales
-    for (char c : word.toCharArray()) {
-        if (!producciones.containsKey(c)) {
-            throw new CYKAlgorithmException("La palabra no está formada sólo por elementos no terminales");
-        }
+    if (!letrasNTerminales.contains(nonterminal)) {
+        throw new CYKAlgorithmException();
     }
-    
-    while (word.contains(nonterminal)) {
-        for (int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
-            if (producciones.containsKey(c)) {
-                Set<String> produccionesNT = producciones.get(c);
-                for (String prod : produccionesNT) {
-                    String newWord = word.substring(0, i) + prod + word.substring(i + 1);
-                    if (newWord.length() == 1) {
-                        return producciones.containsKey(newWord.charAt(0));
-                    }
-                    if (isDerived(newWord)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        break;
-    }
-    return false;
+
+    if (production.length() == 1 && Character.isLowerCase(production.charAt(0)))  {
+        // Si la producción es una letra minúscula
+        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
+        produccionesNT.add(production);
+        producciones.put(nonterminal, produccionesNT);
+    } else if (production.length() == 2 && ((Character.isUpperCase(production.charAt(0)) && Character.isLowerCase(production.charAt(1))) || (Character.isLowerCase(production.charAt(0)) && Character.isUpperCase(production.charAt(1))))) {
+        // Si la producción tiene un símbolo mayúscula y otro minúscula
+        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
+        produccionesNT.add(production);
+        producciones.put(nonterminal, produccionesNT);
+    } else {
+        // Si la producción no cumple con las restricciones
+        throw new CYKAlgorithmException();
 }
-*/
-
+} */
 
     @Override
     /**
