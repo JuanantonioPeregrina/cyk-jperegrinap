@@ -386,6 +386,7 @@ public class BasicTest {
 
         cyk.addProduction('C', "AB");
         cyk.addProduction('C', "a");
+        
 
         assertTrue(cyk.isDerived("baaba"));
     }
