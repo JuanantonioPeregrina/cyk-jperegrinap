@@ -72,7 +72,8 @@ char nonterminal;
         throw new CYKAlgorithmException();
     }
     letrasTerminales.add(terminal);
-}
+    
+    }
 
 
      
@@ -132,6 +133,7 @@ char nonterminal;
             if (currentProduction.equals(production)) {
                 throw new CYKAlgorithmException(); // ya existe
             }
+            
         }
     }
      

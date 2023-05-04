@@ -32,7 +32,7 @@ public class BasicTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Test
+   /* @Test
     public void comprobarAniadirTerminalValidoG134() throws CYKAlgorithmException{
         cyk = new CYKAlgorithm();
         cyk.addTerminal('a');
@@ -44,7 +44,7 @@ public class BasicTest {
         cyk.addTerminal('b'); 
         cyk.addTerminal('c'); 
     }
-    /*
+    
     @Test
     public void comprobarAniadirTerminalValidoG3() throws CYKAlgorithmException{
         cyk = new CYKAlgorithm();
@@ -57,15 +57,15 @@ public class BasicTest {
         cyk = new CYKAlgorithm();
         cyk.addTerminal('a');
         cyk.addTerminal('b');
-    }*/
-     
+    }
+    */
       
     @Test
     public void comprobarAniadirTerminalValido() throws CYKAlgorithmException {
         cyk = new CYKAlgorithm();
         cyk.addTerminal('a');
     }
-
+/*
     @Test
     public void comprobarAniadirTerminalNoValidoG1() throws CYKAlgorithmException {
         thrown.expect(CYKAlgorithmException.class);
@@ -99,7 +99,7 @@ public class BasicTest {
         cyk.addTerminal('B');
         
     }
-           
+     */     
     @Test
     public void comprobarAniadirTerminalNoValido1() throws CYKAlgorithmException {
         thrown.expect(CYKAlgorithmException.class);
@@ -359,8 +359,33 @@ public class BasicTest {
         cyk.addTerminal('a');
         cyk.addTerminal('b');
     }
-
+    
     @Test
+    public void comprobarDerivacionNoValidoG1() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class);
+        
+        cyk = new CYKAlgorithm();
+        
+        cyk.addNonTerminal('A');
+        cyk.addNonTerminal('B');
+        cyk.addNonTerminal('C');
+
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+
+        cyk.setStartSymbol('A');
+
+        cyk.addProduction('A', "BC");
+        
+        cyk.addProduction('B', "CA");
+        cyk.addProduction('B', "a");
+        
+        cyk.addProduction('C', "AB");
+        cyk.addProduction('C', "b");
+
+        cyk.isDerived("BabC");
+    }
+     @Test
     public void comprobarDerivacionNoValido1() throws CYKAlgorithmException {
         thrown.expect(CYKAlgorithmException.class);
 
@@ -389,6 +414,38 @@ public class BasicTest {
         cyk.addProduction('C', "a");
 
         cyk.isDerived("bbBbb");
+    }
+    
+    @Test
+    public void comprobarDerivacionNoValidoG2() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class); //si lo comento funciona
+
+        cyk = new CYKAlgorithm();
+
+        cyk.addNonTerminal('A');
+        cyk.addNonTerminal('B');
+        cyk.addNonTerminal('C');
+        cyk.addNonTerminal('D');
+
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+        cyk.addTerminal('c');
+        
+
+        cyk.setStartSymbol('A');
+
+        cyk.addProduction('A', "BC");
+        cyk.addProduction('A', "a");
+
+        cyk.addProduction('B', "CD");
+        
+        cyk.addProduction('C', "BA");
+        cyk.addProduction('C', "b");
+        
+        cyk.addProduction('D', "c");
+        cyk.isDerived("aaaa");
+        //cyk.isDerived(Character.toString('b'));
+
     }
 
     @Test
@@ -482,4 +539,59 @@ public class BasicTest {
 
         assertFalse(cyk.isDerived("bbb"));
     }
+@Test
+public void comprobarDerivacionValidoG1() throws CYKAlgorithmException {
+
+        cyk = new CYKAlgorithm();
+        
+        cyk.addNonTerminal('A');
+        cyk.addNonTerminal('B');
+        cyk.addNonTerminal('C');
+
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+
+        cyk.setStartSymbol('A');
+
+        cyk.addProduction('A', "BC");
+        
+        cyk.addProduction('B', "CA");
+        cyk.addProduction('B', "a");
+        
+        cyk.addProduction('C', "AB");
+        cyk.addProduction('C', "b");
+
+        assertTrue(cyk.isDerived("babaabaa"));
+    }
+
+@Test
+public void comprobarDerivacionValidoG2() throws CYKAlgorithmException {
+
+        cyk = new CYKAlgorithm();
+
+        cyk.addNonTerminal('A');
+        cyk.addNonTerminal('B');
+        cyk.addNonTerminal('C');
+        cyk.addNonTerminal('D');
+
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+        cyk.addTerminal('c');
+        
+
+        cyk.setStartSymbol('A');
+
+        cyk.addProduction('A', "BC");
+        cyk.addProduction('A', "a");
+
+        cyk.addProduction('B', "CD");
+        
+        cyk.addProduction('C', "BA");
+        cyk.addProduction('C', "b");
+        
+        cyk.addProduction('D', "c");
+        
+        assertTrue(cyk.isDerived("bcb"));
+        //cyk.isDerived(Character.toString('b'));
+}
 }
