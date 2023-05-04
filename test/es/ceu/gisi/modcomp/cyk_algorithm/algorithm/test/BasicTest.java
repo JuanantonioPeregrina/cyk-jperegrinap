@@ -33,11 +33,73 @@ public class BasicTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    public void comprobarAniadirTerminalValidoG134() throws CYKAlgorithmException{
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+    }
+     public void comprobarAniadirTerminalValidoG2() throws CYKAlgorithmException{
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('a');
+        cyk.addTerminal('b'); 
+        cyk.addTerminal('c'); 
+    }
+    /*
+    @Test
+    public void comprobarAniadirTerminalValidoG3() throws CYKAlgorithmException{
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+    }
+    
+    @Test
+    public void comprobarAniadirTerminalValidoG4() throws CYKAlgorithmException{
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('a');
+        cyk.addTerminal('b');
+    }*/
+     
+      
+    @Test
     public void comprobarAniadirTerminalValido() throws CYKAlgorithmException {
         cyk = new CYKAlgorithm();
         cyk.addTerminal('a');
     }
 
+    @Test
+    public void comprobarAniadirTerminalNoValidoG1() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class);
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('b');
+        cyk.addTerminal('b');
+    }
+    @Test
+    public void comprobarAniadirTerminalNoValidoG2() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class);
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('1');
+        cyk.addTerminal('c');
+    
+    }
+    
+    @Test
+     public void comprobarAniadirTerminalNoValidoG3() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class);
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('B');
+        cyk.addTerminal('C');
+        cyk.addTerminal('A');
+        cyk.addTerminal('D');
+    }
+    
+    @Test
+     public void comprobarAniadirTerminalNoValidoG4() throws CYKAlgorithmException {
+        thrown.expect(CYKAlgorithmException.class);
+        cyk = new CYKAlgorithm();
+        cyk.addTerminal('B');
+        
+    }
+           
     @Test
     public void comprobarAniadirTerminalNoValido1() throws CYKAlgorithmException {
         thrown.expect(CYKAlgorithmException.class);

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
  *
  * @author Sergio Saugar García <sergio.saugargarcia@ceu.es>
  */
+
 public class CYKAlgorithm implements CYKAlgorithmInterface {
 
 private List<Character> letrasNTerminales = new ArrayList<>(); /* Para que puede ser utilizada en todos los métodos. */
@@ -41,13 +42,6 @@ char nonterminal;
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
         //List<Character> letrasNTerminales = new ArrayList<>(); // Lista que almacena las letras existentes
-          
-
-/*if (letrasNTerminales.contains(nonterminal)) {
-    System.out.println("La letra " + nonterminal + " ya existe");
-}else{
-    letrasNTerminales.add(nonterminal);
-        }  */ 
 
         if((nonterminal>='A') && (nonterminal<='Z')){ // el valor de nonterminal es una letra mayúscula del alfabeto inglés
           if(!letrasNTerminales.contains(nonterminal)){
@@ -97,7 +91,7 @@ char nonterminal;
 
       public void setStartSymbol(char nonterminal) throws CYKAlgorithmException {
     //char eInicial;
-       // if ((letrasNTerminales.isEmpty) && (letrasNTerminales.add())){
+    // if ((letrasNTerminales.isEmpty) && (letrasNTerminales.add())){
       
     if (letrasNTerminales.contains(nonterminal)){
              
@@ -123,7 +117,7 @@ char nonterminal;
      * previamente.
      */
     public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-    for (int i = 0; i < production.length(); i++) {
+    for (int i = 0; i < production.length(); i++) {  
         char symbol = production.charAt(i);
         if (!letrasTerminales.contains(symbol) && !letrasNTerminales.contains(symbol)) {
             throw new CYKAlgorithmException();
@@ -134,72 +128,29 @@ char nonterminal;
     }
     if (producciones.containsKey(nonterminal)) {
         List<String> currentProductions = producciones.get(nonterminal);
-        for (String currentProduction : currentProductions) {
+        for (String currentProduction : currentProductions) { //currentProduction= currentProductions.get(i)
             if (currentProduction.equals(production)) {
-                throw new CYKAlgorithmException();
+                throw new CYKAlgorithmException(); // ya existe
             }
         }
     }
-    if (production.length() == 1) {
-        if (!letrasTerminales.contains(production.charAt(0))) {
-            throw new CYKAlgorithmException();
-        }
-    } else if (production.length() == 2) {
-        if (!letrasNTerminales.contains(production.charAt(0)) || !letrasNTerminales.contains(production.charAt(1))) {
-            throw new CYKAlgorithmException();
-        }
-    } else {
-        throw new CYKAlgorithmException();
-    }
-    producciones.putIfAbsent(nonterminal, new ArrayList<>());
-    producciones.get(nonterminal).add(production);
-}
-
-   /*ublic void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-    for (int i = 0; i < production.length(); i++) {
-        char symbol = production.charAt(i);
-        if (!letrasTerminales.contains(symbol) && !letrasNTerminales.contains(symbol)) {
-            throw new CYKAlgorithmException();
-        }
-    }
-    if (!letrasNTerminales.contains(nonterminal)) {
-        throw new CYKAlgorithmException();
-    }
-    if (production.length() == 1) {
-        if (!letrasTerminales.contains(production.charAt(0))) {
-            throw new CYKAlgorithmException();
-        }
-    } else if (production.length() == 2) {
-        if (!letrasNTerminales.contains(production.charAt(0)) || !letrasNTerminales.contains(production.charAt(1))) {
-            throw new CYKAlgorithmException();
-        }
-    } else {
-        throw new CYKAlgorithmException();
-    }
-    producciones.putIfAbsent(nonterminal, new ArrayList<>());
-    producciones.get(nonterminal).add(production);
-}
-*/
-  
+     
     
-   /* public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-    if (!letrasTerminales.contains(eInicial) && !letrasNTerminales.contains(eInicial)) {
-    //if (!letrasTerminales.contains(eInicial) && !letrasNTerminales.contains(eInicial) && eInicial != 'λ') {
-    throw new CYKAlgorithmException();
-    }
-    if (!letrasNTerminales.contains(eInicial) && eInicial != 'λ') {
+    if (production.length() == 1) {
+        if (!letrasTerminales.contains(production.charAt(0))) {
+            throw new CYKAlgorithmException();
+        }
+    } else if (production.length() == 2) {
+        if (!letrasNTerminales.contains(production.charAt(0)) || !letrasNTerminales.contains(production.charAt(1))) {
+            throw new CYKAlgorithmException();
+        }
+    } else {
         throw new CYKAlgorithmException();
     }
-
-    for (int i = 0; i < production.length(); i++) {
-        char symbol = production.charAt(i);
-        // rest of the code
-    }
-
-    producciones.putIfAbsent(nonterminal, new ArrayList<String>());
+    producciones.putIfAbsent(nonterminal, new ArrayList<>()); // sino hay entrada para la clave
     producciones.get(nonterminal).add(production);
-} */
-
+}
+    
     @Override
     /**
      * Método que indica si una palabra pertenece al lenguaje generado por la
@@ -213,77 +164,7 @@ char nonterminal;
      * conjunto de terminales definido para la gramática introducida, si la
      * gramática es vacía o si el autómata carece de axioma.
      */
-    
-   /*ublic boolean isDerived(String word) throws CYKAlgorithmException {
-    if (eInicial == '\0') {
-        throw new CYKAlgorithmException();
-    }
-
-    if (word == null || word.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-
-    for (char c : word.toCharArray()) {
-        if (!Character.isUpperCase(c) && !Character.isWhitespace(c)) { // Añade una comprobación para los espacios en blanco
-            throw new CYKAlgorithmException();
-        }
-    }
-
-    if (producciones.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-
-    int n = word.length();
-
-    // Creamos una matriz nxn para el algoritmo CYK
-    List<List<Set<Character>>> matriz = new ArrayList<>();
-    for (int i = 0; i < n; i++) {
-        matriz.add(new ArrayList<>());
-        for (int j = 0; j < n; j++) {
-            matriz.get(i).add(new HashSet<>());
-        }
-    }
-
-    // Inicializamos la diagonal de la matriz con los no terminales que generan cada símbolo
-    for (int i = 0; i < n; i++) {
-        char c = word.charAt(i);
-        for (Map.Entry<Character, List<String>> entry : producciones.entrySet()) {
-            char nt = entry.getKey();
-            List<String> prodList = entry.getValue();
-            for (String prod : prodList) {
-                if (prod.length() == 1 && prod.charAt(0) == c) {
-                    matriz.get(i).get(i).add(nt);
-                }
-            }
-        }
-    }
-
-    // Calculamos las celdas de la matriz utilizando las celdas anteriores
-    for (int l = 2; l <= n; l++) {
-        for (int i = 0; i <= n - l; i++) {
-            int j = i + l - 1;
-            for (int k = i; k < j; k++) {
-                Set<Character> set1 = matriz.get(i).get(k);
-                Set<Character> set2 = matriz.get(k + 1).get(j);
-                for (Character nt : producciones.keySet()) {
-                    List<String> prodList = producciones.get(nt);
-                    for (String prod : prodList) {
-                        if (prod.length() == 2 && set1.contains(prod.charAt(0)) && set2.contains(prod.charAt(1))) {
-                            matriz.get(i).get(j).add(nt);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Comprobamos si la cadena está generada por el no terminal inicial
-    if (matriz.get(0).get(n - 1).contains(eInicial)) {
-        return true;
-    } else {
-        return false;
-    }
-}*/
+ 
 public boolean isDerived(String word) throws CYKAlgorithmException {
     if (eInicial == '\0') {
         throw new CYKAlgorithmException();
@@ -362,124 +243,6 @@ if (word.contains(" ")) {
     return false;
 }
 
-
-
-    
-   /*public boolean isDerived(String word) throws CYKAlgorithmException {
-    
-       if (eInicial == '\0'){
-        throw new CYKAlgorithmException();
-       }
-       
-       if (word == null || word.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-
-    for (char c : word.toCharArray()) {
-        if (!Character.isUpperCase(c) && !Character.isWhitespace(c)) { // Añade una comprobación para los espacios en blanco
-            throw new CYKAlgorithmException();
-        }
-    }
-    if (producciones.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-    
-    
-
-    int n = word.length();
-
-    // Creamos una matriz nxn para el algoritmo CYK
-    List<List<Set<Character>>> matriz = new ArrayList<>();
-    for (int i = 0; i < n; i++) {
-        matriz.add(new ArrayList<>());
-        for (int j = 0; j < n; j++) {
-            matriz.get(i).add(new HashSet<>());
-        }
-    }
-
-    // Inicializamos la diagonal de la matriz con los no terminales que generan cada símbolo
-    for (int i = 0; i < n; i++) {
-        char c = word.charAt(i);
-        for (Map.Entry<Character, List<String>> entry : producciones.entrySet()) {
-            char nt = entry.getKey();
-            List<String> prodList = entry.getValue();
-            for (String prod : prodList) {
-                if (prod.length() == 1 && prod.charAt(0) == c) {
-                    matriz.get(i).get(i).add(nt);
-                }
-            }
-        }
-    }
-
-    // Calculamos las celdas de la matriz utilizando las celdas anteriores
-    for (int l = 2; l <= n; l++) {
-        for (int i = 0; i <= n - l; i++) {
-            int j = i + l - 1;
-            for (int k = i; k < j; k++) {
-                Set<Character> set1 = matriz.get(i).get(k);
-                Set<Character> set2 = matriz.get(k + 1).get(j);
-                for (Character nt : producciones.keySet()) {
-                    List<String> prodList = producciones.get(nt);
-                    for (String prod : prodList) {
-                        if (prod.length() == 2 && set1.contains(prod.charAt(0)) && set2.contains(prod.charAt(1))) {
-                            matriz.get(i).get(j).add(nt);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Comprobamos si la cadena está generada por el no terminal inicial
-    if(matriz.get(0).get(n - 1).contains(eInicial)){
-        return true;
-    }
-        return false;
-} */
-
-
-  
-
-
-
-/*public boolean isDerived(String word) throws CYKAlgorithmException {
-    if (word == null || word.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-    for (int i = 0; i < word.length(); i++) {
-        if (!Character.isUpperCase(word.charAt(i))) {
-            throw new CYKAlgorithmException();
-        }
-    }
-    
-
-    if (eInicial == '\0' || producciones.isEmpty()) {
-        throw new CYKAlgorithmException();
-    }
-
-    return false;
- 
-
-    if (!letrasNTerminales.contains(nonterminal)) {
-        throw new CYKAlgorithmException();
-    }
-
-    if (production.length() == 1 && Character.isLowerCase(production.charAt(0)))  {
-        // Si la producción es una letra minúscula
-        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
-        produccionesNT.add(production);
-        producciones.put(nonterminal, produccionesNT);
-    } else if (production.length() == 2 && ((Character.isUpperCase(production.charAt(0)) && Character.isLowerCase(production.charAt(1))) || (Character.isLowerCase(production.charAt(0)) && Character.isUpperCase(production.charAt(1))))) {
-        // Si la producción tiene un símbolo mayúscula y otro minúscula
-        List<String> produccionesNT = producciones.getOrDefault(nonterminal, new ArrayList<>());
-        produccionesNT.add(production);
-        producciones.put(nonterminal, produccionesNT);
-    } else {
-        // Si la producción no cumple con las restricciones
-        throw new CYKAlgorithmException();
-}
-} */
-
     @Override
     /**
      * Método que, para una palabra, devuelve un String que contiene todas las
@@ -496,7 +259,8 @@ if (word.contains(" ")) {
      * conjunto de terminales definido para la gramática introducida, si la
      * gramática es vacía o si el autómata carece de axioma.
      */
-public String algorithmStateToString(String word) throws CYKAlgorithmException {
+
+    public String algorithmStateToString(String word) throws CYKAlgorithmException {
     // Comprobar que la gramática ha sido definida
     if (producciones.isEmpty() || eInicial == '\0') { //valor por defecto de un char
         throw new CYKAlgorithmException();
@@ -557,99 +321,13 @@ public String algorithmStateToString(String word) throws CYKAlgorithmException {
     return sb.toString();
 }
 
-
-    /*public String algorithmStateToString(String word) throws CYKAlgorithmException {
-    try {  
-        // Verificar que la palabra sea válida
-        for (int i = 0; i < word.length(); i++) {
-            if (Character.isLowerCase(word.charAt(i))) {
-                throw new CYKAlgorithmException();
-            }
-        }
-
-        // Inicializar la tabla
-        Map<Map.Entry<Integer, Integer>, Set<String>> table = new HashMap<>(); // par i,j que producen un conjunto
-        for (int i = 0; i < word.length(); i++) {
-            table.put(Map.entry(i, i), new HashSet<>());
-        }
-
-        // Calcular los valores de cada celda en la tabla
-        for (int j = 1; j < word.length(); j++) {
-            for (int i = 0; i < word.length() - j; i++) {
-                Set<String> cellValues = new HashSet<>();
-                for (int k = i; k < i + j; k++) {
-                    Set<String> leftValues = table.get(Map.entry(i, k));
-                    Set<String> rightValues = table.get(Map.entry(k + 1, i + j));
-                    for (String leftValue : leftValues) {
-                        for (String rightValue : rightValues) {
-                            //for (Production production : grammar.getProductions()) {
-                                if (production.getRight().equals(leftValue + rightValue)) {
-                                    cellValues.add(production.getLeft());
-                                }
-                            }
-                        }
-                    }
-                }
-                table.put(Map.entry(i, i + j), cellValues);
-            }
-        
-
-        // Construir el String que muestra la tabla calculada
-        StringBuilder sb = new StringBuilder();
-        for (int j = 0; j < word.length(); j++) {
-            for (int i = 0; i < word.length() - j; i++) {
-                Set<String> cellValues = table.get(Map.entry(i, i + j));
-                sb.append(String.format("[%d,%d]: ", i, i + j));
-                if (cellValues.isEmpty()) {
-                    sb.append("{}");
-                } else {
-                    sb.append(String.join(",", cellValues));
-                }
-                sb.append("\n");
-            }
-        }
-
-        return sb.toString();
-    } catch (CYKAlgorithmException e) {
-        throw new CYKAlgorithmException();
-    }
-}
-*/
     @Override
     /**
      * Elimina todos los elementos que se han introducido hasta el momento en la
      * gramática (elementos terminales, no terminales, axioma y producciones),
      * dejando el algoritmo listo para volver a insertar una gramática nueva.
      */
-   /* public void removeGrammar() {
-   for (char nonTerminal : letrasNTerminales) {
-    List<String> productionsToRemove = producciones.get(nonTerminal);
-    if (productionsToRemove != null) {
-        producciones.remove(nonTerminal);
-    }
-}
-    } */
- /* public void removeGrammar() {
-    if (producciones.isEmpty()) {
-        return;
-    }
-
-    // Eliminar las producciones de los símbolos no terminales
-    for (char nonterminal : letrasNTerminales) {
-        producciones.remove(nonterminal);
-    }
-
-    // Eliminar la producción S::=
-    producciones.remove('S');
-
-    // Limpiar los conjuntos de símbolos no terminales y terminales
-    letrasNTerminales.clear();
-    letrasTerminales.clear();
-    for (List<String> lista : producciones.values()) {
-        lista.clear();
-    }
-} */
-
+   
 public void removeGrammar() {
     if (producciones.isEmpty()) {
         return;
@@ -662,29 +340,9 @@ public void removeGrammar() {
     letrasNTerminales.clear();
     letrasTerminales.clear();
     producciones.clear();
-System.out.println("Producciones después de eliminar todas las producciones: " + producciones);
+//System.out.println("Producciones después de eliminar todas las producciones: " + producciones);
 }
 
-  /*  producciones.remove('S'); // Eliminar la producción S::=
-    for (char nonTerminal : letrasNTerminales) {
-        producciones.remove(nonTerminal);
-    }
-System.out.println("Producciones después de eliminar la producción S::=: " + producciones);
-*/
-
-
-
-
-
-    /*letrasNTerminales.clear();
-    letrasTerminales.clear();
-    producciones.clear();
-    producciones = new HashMap<>();
-    eInicial = '\0' ;
-    terminal = '\0';
-    nonterminal = '\0';
-    } */ 
- 
     @Override
     /**
      * Devuelve un String que representa todas las producciones que han sido
@@ -697,13 +355,7 @@ System.out.println("Producciones después de eliminar la producción S::=: " + p
      * ejemplo, si se piden las producciones del elemento 'S', el String de
      * salida podría ser: "S::=AB|BC".
      */
-   /* public String getProductions(char nonterminal) {
-    List<String> productions = producciones.get(nonterminal);
-    if (productions == null) {
-        return "";
-    }
-    return productions.stream().collect(Collectors.joining("|"));
-} */
+  
     public String getProductions(char nonterminal) {
     List<String> productions = producciones.get(nonterminal);
     if (productions == null) {
@@ -712,36 +364,7 @@ System.out.println("Producciones después de eliminar la producción S::=: " + p
     String productionsString = productions.stream().collect(Collectors.joining("|"));
     return productionsString.isEmpty() ? "" : nonterminal + "::=" + productionsString; //si es cierto nada y sino lo posterior
 }
-
-  /*  List<String> productions = this.productions.getOrDefault(nonterminal, Collections.emptyList());
-    StringBuilder sb = new StringBuilder();
-    sb.append(nonterminal).append("::=");
-    for (int i = 0; i < productions.size(); i++) {
-        sb.append(productions.get(i));
-        if (i != productions.size() - 1) {
-            sb.append("|");
-        }
-    }
-    return sb.toString();
-} */
-
-    /* 
-    List<String> productions = producciones.getOrDefault(nonterminal, Collections.emptyList());
-    StringBuilder sb = new StringBuilder();
-    sb.append(nonterminal).append("::=");
-    for (int i = 0; i < productions.size(); i++) {
-        sb.append(productions.get(i));
-        if (i != productions.size() - 1) {
-            sb.append("|");
-        }
-    }
-    return sb.toString();
-}
-*/
-        
-        //throw new UnsupportedOperationException("Not supported yet.");
     
-
     @Override
     /**
      * Devuelve un String con la gramática completa.
@@ -765,7 +388,3 @@ System.out.println("Producciones después de eliminar la producción S::=: " + p
     return grammar.toString();
 }
 }
-
-    
-
-
