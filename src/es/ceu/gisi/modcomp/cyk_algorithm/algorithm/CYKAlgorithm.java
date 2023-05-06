@@ -167,8 +167,80 @@ char nonterminal;
      * gramática es vacía o si el autómata carece de axioma.
      */
  
-public boolean isDerived(String word) throws CYKAlgorithmException {
-    if (eInicial == '\0') {
+
+
+ public boolean isDerived(String word) throws CYKAlgorithmException {
+    // Comprueba si la palabra es derivada
+    if (eInicial == '\0' || producciones.isEmpty()) {
+        throw new CYKAlgorithmException();
+    }
+
+    if (word == null || word.isEmpty() || word.contains(" ")) {
+        throw new CYKAlgorithmException();
+    }
+
+    for (char c : word.toCharArray()) {
+        if (!letrasTerminales.contains(c)) {
+            throw new CYKAlgorithmException();
+        }
+    }
+
+    int n = word.length();
+
+    List<List<Set<Character>>> matriz = new ArrayList<>();
+    for (int i = 0; i < n; i++) {
+        matriz.add(new ArrayList<>());
+        for (int j = 0; j < n; j++) {
+            matriz.get(i).add(new HashSet<>());
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        char c = word.charAt(i);
+        for (Map.Entry<Character, List<String>> entry : producciones.entrySet()) {
+            char nt = entry.getKey();
+            List<String> prodList = entry.getValue();
+            for (String prod : prodList) {
+                if (prod.length() == 1 && prod.charAt(0) == c) {
+                    matriz.get(i).get(i).add(nt);
+                }
+            }
+        }
+    }
+
+    for (int l = 2; l <= n; l++) {
+        for (int i = 0; i <= n - l; i++) {
+            int j = i + l - 1;
+            for (int k = i; k < j; k++) {
+                Set<Character> set1 = matriz.get(i).get(k);
+                Set<Character> set2 = matriz.get(k + 1).get(j);
+                for (Character nt : producciones.keySet()) {
+                    List<String> prodList = producciones.get(nt);
+                    for (String prod : prodList) {
+                        if (prod.length() == 2 && set1.contains(prod.charAt(0)) && set2.contains(prod.charAt(1))) {
+                            matriz.get(i).get(j).add(nt);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Set<Character> startSet = matriz.get(0).get(n-1);
+
+    if (startSet == null || startSet.isEmpty()) {
+        return false;
+    }
+
+    if (!startSet.contains(eInicial)) {
+        return false;
+    }
+
+    return true;
+}
+
+
+   /* if (eInicial == '\0') {
         throw new CYKAlgorithmException();
     }
 
@@ -242,9 +314,11 @@ if (word.contains(" ")) {
             return true;
         }
     }
+    
     return false;
+    
 }
-
+*/
     @Override
     /**
      * Método que, para una palabra, devuelve un String que contiene todas las
