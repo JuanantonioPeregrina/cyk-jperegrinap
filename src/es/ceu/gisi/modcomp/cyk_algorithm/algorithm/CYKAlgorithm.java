@@ -20,14 +20,17 @@ import java.util.stream.Collectors;
 
 public class CYKAlgorithm implements CYKAlgorithmInterface {
 
-private final List<Character> letrasNTerminales = new ArrayList<>(); /* Para que puede ser utilizada en todos los métodos. */
+/* Variables globales para todos los métodos. */
+private final List<Character> letrasNTerminales = new ArrayList<>(); 
 private final List<Character> letrasTerminales  = new ArrayList<>();
-//Almacena todas las producciones del lenguaje
-private final Map<Character, List<String>> producciones = new HashMap<>();
 private char eInicial; //axioma
 
-   
-    @Override
+//Almacena todas las producciones del lenguaje
+private final Map<Character, List<String>> producciones = new HashMap<>();
+
+    
+
+@Override
     /**
      * Método que añade los elementos no terminales de la gramática.
      *
@@ -93,7 +96,7 @@ private char eInicial; //axioma
      
         if (!letrasNTerminales.isEmpty()) {  //si la lista no está vacía
         
-        //le asigna el valor de la primera posición 
+        //Le asigna el valor de la primera posición 
         this.eInicial = letrasNTerminales.get(0);  
         }
     }else{
@@ -117,7 +120,7 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
     for (int i = 0; i < production.length(); i++) {
         char symbol = production.charAt(i); //asigna el char del índice
        
-        // Si no hay símbolos en las listas se produce una excepción
+    // Si no hay símbolos en las listas se produce una excepción
         if (!letrasTerminales.contains(symbol) && !letrasNTerminales.contains(symbol)) {
             throw new CYKAlgorithmException();
         }
@@ -135,21 +138,25 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
     }
     
     //Si su longitud corresponde a 1 y no hay un elemento en la primera posición
-    if (production.length() == 1) { 
-        if (!letrasTerminales.contains(production.charAt(0))) {
-            throw new CYKAlgorithmException();
+    switch (production.length()) {
+        case 1 -> {
+            if (!letrasTerminales.contains(production.charAt(0))) {
+                throw new CYKAlgorithmException();
+            }
         }
-    } else if (production.length() == 2) { 
-        if (!letrasNTerminales.contains(production.charAt(0)) || !letrasNTerminales.contains(production.charAt(1))) {
-            throw new CYKAlgorithmException();
+        case 2 -> {
+            if (letrasNTerminales.contains(production.charAt(0)) && letrasNTerminales.contains(production.charAt(1))) {
+            } else {
+                throw new CYKAlgorithmException();
+            }
         }
-    } else {
-        throw new CYKAlgorithmException();
+        default -> throw new CYKAlgorithmException();
     }
     // Sino hay entrada para la clave le asigna una lista vacía
     producciones.putIfAbsent(nonterminal, new ArrayList<>()); 
     producciones.get(nonterminal).add(production);
 }
+
 
     @Override
     /**
@@ -166,7 +173,7 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
      */
  
     public boolean isDerived(String word) throws CYKAlgorithmException {
-   
+     
     if (eInicial == '\0') {  //si el axioma tiene su valor por defecto (nulo)
         throw new CYKAlgorithmException();
     }
@@ -192,13 +199,14 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
     }
 
     int n = word.length();
-
+    
     // Crea una matriz NxN a través de una lista dentro de otra de conjuntos 
     List<List<Set<Character>>> matriz = new ArrayList<>();
     for (int i = 0; i < n; i++) {  //n filas hasta long de la palabra
         matriz.add(new ArrayList<>()); //añade una lista lista vacía
         for (int j = 0; j < n; j++) { //columnas hasta n
             matriz.get(i).add(new HashSet<>()); // para ese i le añade un conj
+
         }
     }
 
@@ -212,6 +220,7 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
                 //  si el único caracter que la compone es igual a c
                 if (prod.length() == 1 && prod.charAt(0) == c) {
                     matriz.get(i).get(i).add(nt); //en la diagonal se añade si se deriva 
+                
                 }
             }
         }
@@ -235,23 +244,30 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
     //Si la cadena es de long 2 tiene un simbolo de conj1 seguido por uno de conj2
                         if (prod.length() == 2 && conj1.contains(prod.charAt(0)) && conj2.contains(prod.charAt(1))) {
                             matriz.get(i).get(j).add(nt); //añade si se cumple
+                            //System.out.println("matriz(" + i + "," + j + "): " + matriz.get(i).get(j));
                     }
                     }
                 }
             }
         }
     }
-
+   
+   
     // Comprueba si la cadena está generada por el axioma
     for (int i = 0; i < n; i++) {
         if (matriz.get(0).get(i).contains(eInicial)) {
+    
+    //Llamada al método algorithm y posteriormente lo muestra por pantalla
+           String matrixRepresentation = algorithmStateToString(word);
+            System.out.println(matrixRepresentation);
             return true;
         }
     }
-    
+     
     return false;
-} 
+    } 
  
+    
     @Override
     /**
      * Método que, para una palabra, devuelve un String que contiene todas las
@@ -270,79 +286,90 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
      */
 
     public String algorithmStateToString(String word) throws CYKAlgorithmException {
-       
-    // Si la tabla está vacía o el axioma es nulo
-    if (producciones.isEmpty() || eInicial == '\0') { //valor estándar de 1 char
-        throw new CYKAlgorithmException();  //lanza excepción
+   
+    // Verifica si la palabra es nula o vacía
+    if (word == null || word.isEmpty()) {
+        throw new CYKAlgorithmException();
     }
-
+    
     int n = word.length();
-
-   // Crea una matriz de valores
-    Set<String>[][] valores = new Set[n][n]; //n filas y n columnas
+    List<List<Set<Character>>> matriz = new ArrayList<>(); //lista dentro de otra
     
-    for (int i = 0; i < n; i++) { //fila hasta el número de letras de la palabra
-        for (int j = 0; j < n; j++) { //columna
-            valores[i][j] = new HashSet<>(); // se crea new objeto en cada celda
-        }                                       // para que tenga {}
+    // Inicializa la matriz de conjuntos vacíos
+    for (int i = 0; i < n; i++) {
+        matriz.add(new ArrayList<>());
+        for (int j = 0; j < n; j++) {
+            matriz.get(i).add(new HashSet<>());
+        }
     }
-
-    // Calcular los valores para las celdas debajo de la diagonal
-    for (int i = 1; i < n; i++) {
-        for (int j = 0; j < n - i; j++) {
-            int fila = i + j; // indicar la última fila 
-            for (int k = j; k < fila; k++) {
     
-    //Se divide en 2 subcadenas, izquierda y derecha y luego se concatenan
-                Set<String> valIzq = valores[j][k];
-                Set<String> valDer = valores[k+1][fila]; 
-               
-                for (String leftValue : valIzq) {
-                    for (String rightValue : valDer) {
-                        String concatValue = leftValue + rightValue;
-                        //Lista temporal para concatenar las subcadenas 
-                        List<String> produccionesConcat = producciones.get(concatValue);
-                        if (produccionesConcat != null) {
-                            valores[j][fila].addAll(produccionesConcat);
+    // Calcula las celdas de la matriz para las producciones de longitud 1
+    for (int i = 0; i < n; i++) {
+        char c = word.charAt(i);
+        for (char nt : letrasNTerminales) {
+            List<String> prodList = producciones.get(nt);
+            for (String prod : prodList) {
+                if (prod.length() == 1 && prod.charAt(0) == c) {
+                    matriz.get(i).get(i).add(nt);
+                }
+            }
+        }
+    }
+    
+    // Calcula las celdas de la matriz para las producciones de long mayor a 1
+    for (int p = 2; p <= n; p++) {
+        for (int i = 0; i <= n - p; i++) {
+            int j = i + p - 1;
+            for (int k = i; k < j; k++) {
+                Set<Character> conj1 = matriz.get(i).get(k);
+                Set<Character> conj2 = matriz.get(k + 1).get(j);
+                for (Character nt : letrasNTerminales) {
+                    List<String> prodList = producciones.get(nt);
+                    for (String prod : prodList) {
+                        if (prod.length() == 2 && conj1.contains(prod.charAt(0)) && conj2.contains(prod.charAt(1))) {
+                            matriz.get(i).get(j).add(nt);
                         }
                     }
                 }
             }
         }
     }
-
-    // Inicializa la diagonal de la matriz con las producciones que genera el sym
-    for (int i = 0; i < n; i++) { 
-        char c = word.charAt(i); // se recorre la palabra letra x letra
     
-        //Si hay producciones para ese char, se añaden al conjunto de valores en la posición 
-        List<String> produccionesC = producciones.get(c);
-        if (produccionesC != null) {
-            valores[i][i].addAll(produccionesC);
-        }
-    } 
-
-    // Construye la representación en cadena de la matriz de valores
-    StringBuilder sb = new StringBuilder(); // crea el objeto StringBuilder
-    for (int i = n - 1; i >= 0; i--) {
-        for (int j = 0; j < n - i; j++) {
-            int fila = j;
-            int columna = i + j;
-            sb.append("(").append(fila).append(",").append(columna).append("): ");
+    // Construye la representación de la tabla como cadena
+    StringBuilder tableBuilder = new StringBuilder(); //crea el constructor
+    tableBuilder.append("\t");
+  
+        for (int i = 0; i < n; i++) {
+    tableBuilder.append(i + 1).append("\t");
+    }
+        
+    tableBuilder.append(System.lineSeparator());
+    
+    // Agrega los elementos de los conjuntos a la representación de la tabla
+        for (int j = 0; j < n; j++) {
+    tableBuilder.append(j + 1).append("\t");
+        
+        for (int i = 0; i < n - j; i++) {
+        Set<Character> set = matriz.get(i).get(i + j);
+        
+        if (set.isEmpty()) {
+            tableBuilder.append("{}").append("\t");
+        }else{
+            StringBuilder setBuilder = new StringBuilder();
             
-    // Conjunto que se asocia a la matriz de valores 
-    Set<String> cellValues = valores[fila][columna]; 
-    
-    //Para cada celda comprueba si el conjunto de valores es vacío o no
-            if (cellValues.isEmpty()) {
-                sb.append("-\n");
-            } else { //concatena los elementos de la colección en una cadena
-                sb.append(String.join(",", cellValues)).append("\n");
+            for (Character nt : set) {
+                setBuilder.append(nt).append(",");
             }
+            setBuilder.deleteCharAt(setBuilder.length() - 1);
+            tableBuilder.append(setBuilder).append("\t");
         }
     }
-    return sb.toString();
-}
+        tableBuilder.append(System.lineSeparator());
+    }   
+
+
+    return tableBuilder.toString(); //devuelve la cadena de caracteres 
+    }
 
     
     @Override
@@ -400,10 +427,10 @@ public void addProduction(char nonterminal, String production) throws CYKAlgorit
 
     for (char nt : letrasNTerminales) {
     
-    //El this hace referencia al atributo "producciones" de la clase actual
+    //El this hace referencia al atributo "producciones" de la tabla
        List<String> producciones = this.producciones.get(nt); 
         for (String p : producciones) { //agrega una nueva línea después de cada producción
-            grammar.append(nt).append(" -> ").append(p).append(System.lineSeparator());
+            grammar.append(nt).append(" ::= ").append(p).append(System.lineSeparator());
         }
     }
 

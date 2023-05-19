@@ -659,4 +659,5 @@ public void comprobarDerivacionValidoG4() throws CYKAlgorithmException {
  
         assertTrue(cyk.isDerived("bbb"));
     }
+
 }
